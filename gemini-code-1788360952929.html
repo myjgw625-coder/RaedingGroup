@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>態度決定一切 - 簡報動畫</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 50%, #e6e9f0 100%);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(255, 255, 255, 0.6);
+      --primary-purple: #6a5acd;
+      --accent-pink: #e83e8c;
+      --accent-orange: #ff6b4a;
+      --accent-blue: #2a82e4;
+      --text-dark: #2c3e50;
+      --text-muted: #6c757d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    /* 簡報外層容器 */
+    .slide-container {
+      width: 100%;
+      max-width: 960px;
+      background: rgba(248, 249, 250, 0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      padding: 32px;
+      position: relative;
+    }
+
+    /* 主標題 */
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      background: linear-gradient(45deg, #4a00e0, #8e2de2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* 頂部三卡片指標 (數據區) */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .metric-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      border: 1px solid rgba(0,0,0,0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .metric-val {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .metric-val.purple { color: #8e2de2; }
+    .metric-val.pink { color: var(--accent-pink); }
+    .metric-val.blue { color: var(--accent-blue); }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* 中間區域：重點摘要卡片 */
+    .main-section {
+      background: linear-gradient(180deg, rgba(230,238,255,0.6) 0%, rgba(240,230,255,0.6) 100%);
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.8);
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 180fr 1fr;
+      grid-template-columns: 1fr 160px 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .pill-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .pill-item {
+      background: linear-gradient(90deg, #7f00ff, #e100ff);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(127, 0, 255, 0.2);
+    }
+
+    .pill-item.blue-theme {
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      box-shadow: 0 4px 10px rgba(0, 114, 255, 0.2);
+    }
+
+    /* 中央旋轉/浮動動畫核心 */
+    .center-orb {
+      width: 130px;
+      height: 130px;
+      margin: 0 auto;
+      background: radial-gradient(circle at 30% 30%, #ffffff, #a8c0ff);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1), inset 0 0 15px rgba(255,255,255,0.8);
+      animation: float 4s ease-in-out infinite;
+      position: relative;
+    }
+
+    .center-orb h3 {
+      font-size: 1.6rem;
+      color: #333;
+    }
+
+    .center-orb p {
+      font-size: 0.75rem;
+      color: #555;
+      font-weight: bold;
+    }
+
+    /* 底部區域：實務應用 */
+    .practice-section {
+      background: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .practice-header {
+      background: linear-gradient(90deg, #ff6b4a, #ffa07a);
+      color: #ffffff;
+      padding: 12px 20px;
+      font-weight: bold;
+      font-size: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .role-card {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 16px;
+      border-left: 4px solid var(--accent-orange);
+    }
+
+    .role-card.legal { border-left-color: var(--primary-purple); }
+    .role-card.it { border-left-color: var(--accent-blue); }
+
+    .role-title {
+      font-weight: bold;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .role-desc {
+      font-size: 0.82rem;
+      color: #555;
+      line-height: 1.4;
+    }
+
+    /* 動畫 Keyframes */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(3deg); }
+    }
+
+    /* 入場動畫類別 */
+    .animated-element {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .animated-element.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 動畫播放控制選單 */
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      background: #ffffff;
+      border: 1px solid #ddd;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-dark);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #f0f0f0;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary-purple);
+      color: white;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: #5a4bbf;
+    }
+
+    /* 響應式調整 */
+    @media (max-width: 768px) {
+      .summary-grid, .role-grid, .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+      .center-orb {
+        margin: 16px auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slide-container">
+    <div class="header animated-element">
+      <h1>態度決定一切</h1>
+      <p>速度革命時代的自我反省與跨部門實踐</p>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card animated-element">
+        <div class="metric-val purple">EQ &gt; IQ</div>
+        <div class="metric-label">情緒智慧勝於智商</div>
+      </div>
+      <div class="metric-card animated-element">
+        <div class="metric-val pink">態 = 能 + 心</div>
+        <div class="metric-label">心上的能量展現</div>
+      </div>
+      <div class="metric-card animated-element">
+        <div class="metric-val blue">100%</div>
+        <div class="metric-label">時時刻刻高敏感自省</div>
+      </div>
+    </div>
+
+    <div class="main-section animated-element">
+      <div class="section-title">
+        <span>📌</span> 章節重點摘要
+      </div>
+      <div class="summary-grid">
+        <div class="pill-stack">
+          <div class="pill-item animated-element">速度革命：時時刻刻自我反省</div>
+          <div class="pill-item animated-element">吾日三省：誠信、忠實、踐履</div>
+        </div>
+
+        <div class="center-orb animated-element">
+          <h3>態</h3>
+          <p>心上能量</p>
+        </div>
+
+        <div class="pill-stack">
+          <div class="pill-item blue-theme animated-element">日月之食：君子過而人仰之</div>
+          <div class="pill-item blue-theme animated-element">勇於承擔：多做絕不吃虧</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="practice-section animated-element">
+      <div class="practice-header">
+        <span>💼 跨部门職場實務應用案例</span>
+        <span style="font-size: 0.8rem; opacity: 0.9;">態度決定高度</span>
+      </div>
+      <div class="role-grid">
+        <div class="role-card animated-element">
+          <div class="role-title">🏛️ 股務代理</div>
+          <div class="role-desc">
+            面對股東會突發衝突時不推卸責任，迅速檢討流程並調和各方情緒，建立高信任度。
+          </div>
+        </div>
+
+        <div class="role-card legal animated-element">
+          <div class="role-title">⚖️ 法務人員</div>
+          <div class="role-desc">
+            勇於主動承擔風險控管，不僅點出合約問題，更主動提供彈性解決方案支援業務推進。
+          </div>
+        </div>
+
+        <div class="role-card it animated-element">
+          <div class="role-title">💻 IT 資訊團隊</div>
+          <div class="role-desc">
+            系統異常時優先自我反省排查，主動優化 UI/UX 降低使用者誤操作，絕不怪罪使用者。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-primary" onclick="playAnimation()">▶ 重新播放動畫</button>
+  </div>
+
+  <script>
+    // 依序播放逐個元素的登場動畫
+    function playAnimation() {
+      const elements = document.querySelectorAll('.animated-element');
+      
+      // 先全部隱藏
+      elements.forEach(el => el.classList.remove('visible'));
+
+      // 依序加上 delay 動畫
+      elements.forEach((el, index) => {
+        setTimeout(() => {
+          el.classList.add('visible');
+        }, index * 180); // 每個元素間隔 180 毫秒登場
+      });
+    }
+
+    // 頁面載入後自動播放
+    window.addEventListener('DOMContentLoaded', () => {
+      playAnimation();
+    });
+  </script>
+</body>
+</html>
